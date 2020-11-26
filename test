@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -e
+
+rm -rf CovidDB
+mkdir CovidDB
+cd CovidDB
+
+# Download slug list (country names):
+wget -O - https://api.covid19api.com/countries | tr '\{' '\n' |
+    awk -F\" '{ print $8 }' | sed 's/united-states//' |
+    sed '/^$/d' | sort > slugs
+
+mkdir Countries
+( cd Countries
+  sed 's#^#https://api.covid19api.com/total/country/#' ../slugs | wget -w 0.5 -nv -i -) || true
+  
+ls Countries/* | while read file; do
+
+      tr '\{' '\n' < "${file}" | sed 's/T..:..:[^"]*"/"/' | head -3
+      printf "\n"
+      
+done > test.data
+
+
+
