@@ -207,6 +207,7 @@ void load_database(char* program_name){
 
 int main(int argc, char *argv[])
 {
+    load_database(argv[1]);
     
     // for (int i=0; i<num_data_points; ++i)
     // {
