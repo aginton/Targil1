@@ -1,12 +1,17 @@
+#define _XOPEN_SOURCE
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
 #include <libgen.h>
+
 #include <time.h>
+
 #include "databaseAPI.h"
 #include "countryReader.h"
+
+
 
 char* valid_keys[NUMBER_OF_KEYS] = {"Confirmed", "Deaths", "Recovered", "Active"};
 
@@ -72,6 +77,16 @@ bool getDataPointByDate(char* date, Country* country_p, DataPoint** out_data_poi
 
 bool getDataPointValueByKey(DataPoint* data_point_p, Keys key, int* out_value)
 {
+    if (data_point_p == NULL)
+    {
+        puts("getDataPointValueByKey received NULL data_point_p");
+        return false;
+    }
+    if (out_value == NULL)
+    {
+        puts("getDataPointValueByKey received NULL out_value");
+        return false;
+    }
     switch (key)
     {
         case CONFIRMED:
@@ -135,15 +150,56 @@ bool isValidKey(char* key, Keys* key_enum)
     return false;
 }
 
-bool isValidDate(Country* country_p, char* date_str)
+DateValidation isValidDate(Country* country_p, char* date_str)
 { 
-    struct tm* tm_p = getdate(date_str);
-    if(NULL == tm_p)
-    {
-        return false;
-    }
+    // struct tm* tm_p = getdate(date_str);
+    // if(NULL == tm_p)
+    // {
+    //     return false;
+    // }
+    
 
-    time_t input_date = mktime(tm_p);
+    if (country_p == NULL)
+    {
+        //puts("isValidDate received NULL country_p");
+        return DATE_NULL_COUNTRY_P;
+    }
+    // printf("isValidDate called for country %s and for date %s\n",
+    //     country_p->name, date_str);
+
+    //puts("1");
+    struct tm tm = {0};
+          
+    char* something = strptime(date_str,"%Y-%m-%d", &tm);
+    if (something == NULL)
+    {
+        return DATE_INVALID;
+    }
+    //puts("2");
+    time_t input_date = mktime(&tm);
+    //puts("3");
+
+    strptime(country_p->data_points[0].date,"%Y-%m-%d", &tm);
+    //puts("4");
+    time_t DB_start_date = mktime(&tm);
+    //puts("5");
+    
+    strptime(
+        country_p->data_points[country_p->data_points_size - 1].date,
+        "%Y-%m-%d", &tm);
+    //puts("6");
+    
+    time_t DB_end_date = mktime(&tm);
+    //puts("7");
+    DateValidation status = ((input_date >= DB_start_date) && (input_date <= DB_end_date)) ? DATE_SUCCESS : DATE_OUT_OF_SCOPE;
+    // if (ans){
+    //     printf("isValidDate returning true\n");
+    // }
+    // else{
+    //     printf("isValidDate returning false\n");
+    // }
+    return status;
+    //return (input_date >= DB_start_date) && (input_date <= DB_end_date);
 
     // struct tm DB_start_date_tm = {0};
     // DB_start_date_tm.tm_mday = 22;
@@ -151,9 +207,10 @@ bool isValidDate(Country* country_p, char* date_str)
     // DB_start_date_tm.tm_year = 120; // Since 1900
     // time_t DB_start_date = mktime(&DB_start_date_tm);
 
-    time_t DB_start_date = mktime(getdate(country_p->data_points[0].date));
-    time_t DB_end_date = mktime(getdate(
-        country_p->data_points[country_p->data_points_size - 1].date));
+    // time_t DB_start_date = mktime(getdate(country_p->data_points[0].date));
+    // time_t DB_end_date = mktime(getdate(
+    //     country_p->data_points[country_p->data_points_size - 1].date));
     
-    return (input_date >= DB_start_date) && (input_date <= DB_end_date);
+    // return (input_date >= DB_start_date) && (input_date <= DB_end_date);
+
 }

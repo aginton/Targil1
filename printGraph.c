@@ -29,6 +29,10 @@ bool getParameters(int argc, char* argv[], char** out_country_name, Keys* out_ke
             {
                 validKey = true;
             }
+            else
+            {
+                printf("The key %s is invalid.\n",argv[parameter_num+1]);
+            }
         }
         
     }
