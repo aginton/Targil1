@@ -6,46 +6,7 @@
 #include "databaseAPI.h"
 
 
-// bool getParameters(int argc, char* argv[], char** out_date, char** out_key)
-// {
-//     bool isValid = true;
-    
-//     for(int parameter_num = 1; parameter_num <= argc; parameter_num += 2)
-//     {
-//         if (0 == strcmp(argv[parameter_num], "--Date"))
-//         {
-//             if (isValidDate(argv[parameter_num+1]))
-//             {
-//                 *out_date = argv[parameter_num + 1];
-//             }
-//             else
-//             {
-//                 isValid = false;
-//                 break;
-//             }
-//         }
-//         else if (0 == strcmp(argv[parameter_num], "--Key"))
-//         {
-//             if (isValidKey(argv[parameter_num + 1]))
-//             {
-//                 *out_key = argv[parameter_num + 1];
-//             }
-//             else
-//             {
-//                 isValid = false;
-//                 break;
-//             }
-//         }
-//         else
-//         {
-//             isValid = false;
-//             break;
-//         }
-        
-//     }
 
-//     return isValid;
-// }
 
 bool getParameters(int argc, char* argv[], char** out_date, Keys* out_key)
 {

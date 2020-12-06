@@ -8,6 +8,7 @@
 #define COUNTRY_INDEX_FILENAME "country_index"
 #define COVIDDB_FOLDER_SUF "/CovidDB/"
 #define NUMBER_OF_KEYS 4
+#include <stdbool.h>
 
 typedef enum {CONFIRMED, DEATHS, RECOVERED, ACTIVE, NA} Keys;
 

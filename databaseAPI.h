@@ -1,6 +1,7 @@
 #pragma once
 
 #include "country.h"
+#include <stdbool.h>
 extern char* valid_keys[NUMBER_OF_KEYS];
 
 typedef enum {DATE_SUCCESS = 0, DATE_NULL_COUNTRY_P, DATE_INVALID, DATE_OUT_OF_SCOPE} DateValidation;
